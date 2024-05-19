@@ -66,3 +66,6 @@ function animate() {
   controls.update(); // Update controls in the animation loop
   renderer.render(scene, camera);
 }
+// Play background music
+const backgroundMusic = document.getElementById('background-music');
+backgroundMusic.play();
