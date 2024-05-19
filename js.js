@@ -1,27 +1,35 @@
-document.getElementById('changeTextButton').addEventListener('click', function() {
-  document.getElementById('title').textContent = 'Text Changed!';
-});
-
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf0f0f0); // Light gray background
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById('container').appendChild(renderer.domElement);
 
-// Add a light
-const light = new THREE.HemisphereLight(0xffffff, 0x444444);
-light.position.set(0, 200, 0);
-scene.add(light);
+// Add a hemisphere light
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+hemiLight.position.set(0, 200, 0);
+scene.add(hemiLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff);
-directionalLight.position.set(0, 200, 100);
-scene.add(directionalLight);
+// Add a directional light
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.0);
+dirLight.position.set(0, 200, 100);
+dirLight.castShadow = true;
+scene.add(dirLight);
 
-// Load the 3D model
+// Additional ambient light
+const ambientLight = new THREE.AmbientLight(0x404040, 2); // Soft white light
+scene.add(ambientLight);
+
+let model;
 const loader = new THREE.GLTFLoader();
 loader.load('3d.glb', function(gltf) {
-  scene.add(gltf.scene);
+  model = gltf.scene;
+  scene.add(model);
+
+  // Initial animation settings
+  model.position.set(0, -5, 0); // Start below the scene
   animate();
 }, undefined, function(error) {
   console.error(error);
@@ -30,20 +38,6 @@ loader.load('3d.glb', function(gltf) {
 // Set the camera position
 camera.position.z = 5;
 
-// Resize function to adjust the scene when the window is resized
-window.addEventListener('resize', function() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  renderer.setSize(width, height);
-  camera.aspect = width / height;
-  camera.updateProjectionMatrix();
-});
-
-// Animation loop
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-}
 // Add OrbitControls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; // Enable damping (inertia)
@@ -60,12 +54,28 @@ window.addEventListener('resize', function() {
   controls.update(); // Update controls
 });
 
+// Get the audio element and play button
+const backgroundMusic = document.getElementById('background-music');
+const playButton = document.getElementById('play-button');
+
+// Play background music on button click
+playButton.addEventListener('click', function() {
+  backgroundMusic.play();
+  playButton.style.display = 'none'; // Hide the button after playing
+});
+
 // Animation loop
 function animate() {
   requestAnimationFrame(animate);
+
+  // Animate the model's position
+  if (model) {
+    model.position.y += 0.05; // Move the model up
+    if (model.position.y > 0) { // Stop at the desired position
+      model.position.y = 0;
+    }
+  }
+
   controls.update(); // Update controls in the animation loop
   renderer.render(scene, camera);
 }
-// Play background music
-const backgroundMusic = document.getElementById('background-music');
-backgroundMusic.play();
