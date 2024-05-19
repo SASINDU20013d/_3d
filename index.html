@@ -11,13 +11,23 @@
 <h1>3D Object View</h1>
 
 <div id="container"></div>
-<button id="playButton">Play Song</button>
-<audio id="audioPlayer" src="song.mp3"></audio>
-Developed by SASINDU
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
 
 <script src="js.js"></script>
+<audio id="myAudio">
+  <source src="song.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<button onclick="playAudio()">Play</button>
+
+<script>
+  function playAudio() {
+    var audio = document.getElementById("myAudio");
+    audio.play();
+  }
+</script>
 </body>
 </html>
