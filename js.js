@@ -100,7 +100,7 @@ function animate() {
 
   // Animate the model's position (initial rise)
   if (model && model.position.y < 0) {
-    model.position.y += 0.05; // Move the model up
+    model.position.y += 0.01; // Move the model up
   } else {
     // Model has reached the top, start rotation
     model.rotation.y += 0.09; // Rotate the model around the y-axis
