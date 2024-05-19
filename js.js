@@ -1,8 +1,8 @@
 // Set up the scene, camera, and renderer
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xf0f0f0); // Light gray background
+scene.background = new THREE.Color(0xf0f0f1); // Light gray background
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.getElementById('container').appendChild(renderer.domElement);
@@ -36,7 +36,7 @@ loader.load('3d.glb', function(gltf) {
 });
 
 // Set the camera position
-camera.position.z = 5;
+camera.position.z = 3;
 
 // Add OrbitControls
 const controls = new THREE.OrbitControls(camera, renderer.domElement);
@@ -77,5 +77,35 @@ function animate() {
   }
 
   controls.update(); // Update controls in the animation loop
+  renderer.render(scene, camera);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+  var audioPlayer = document.getElementById('audioPlayer');
+  var playButton = document.getElementById('playButton');
+
+  playButton.addEventListener('click', function () {
+    if (audioPlayer.paused) {
+      audioPlayer.play();
+      playButton.textContent = 'Pause Song';
+    } else {
+      audioPlayer.pause();
+      playButton.textContent = 'Play Song';
+    }
+  });
+});
+// Animation loop
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Animate the model's position (initial rise)
+  if (model && model.position.y < 0) {
+    model.position.y += 0.05; // Move the model up
+  } else {
+    // Model has reached the top, start rotation
+    model.rotation.y += 0.09; // Rotate the model around the y-axis
+  }
+
+  controls.update();
   renderer.render(scene, camera);
 }
