@@ -109,3 +109,27 @@ function animate() {
   controls.update();
   renderer.render(scene, camera);
 }
+// Rotate the model slowly in the animation loop
+function animate() {
+    requestAnimationFrame(animate);
+    
+    // Rotate the model around its y-axis
+    if (model) {
+        let rotationSpeed = 0.005; // Default rotation speed
+        
+        // Adjust rotation speed for mobile devices
+        if (isMobileDevice()) {
+            rotationSpeed *= 0.5; // Reduce rotation speed for mobile devices
+        }
+        
+        model.rotation.y += rotationSpeed; // Apply rotation speed
+    }
+
+    controls.update(); // Update controls in the animation loop
+    renderer.render(scene, camera);
+}
+
+// Function to check if the device is a mobile device
+function isMobileDevice() {
+    return /Mobi|Android/i.test(navigator.userAgent);
+}
